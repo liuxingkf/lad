@@ -1,0 +1,716 @@
+\documentclass[onlymath,xcolor=pdftex,dvipsnames,table]{beamer}
+\usefonttheme{serif}
+
+\usepackage{array}
+\usepackage{color}
+\usepackage{xspace}
+\usepackage{graphicx}
+\usepackage{subfigure}
+\usepackage{pstricks}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{multimedia}
+%\usepackage{beamerthemeshadow}
+\usepackage{amsmath,amsfonts,amsthm,amssymb}
+\usepackage[noend]{algpseudocode}
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+\usepackage{transparent} % transparent background
+\usepackage{etoolbox}
+
+\usetheme{Singapore}
+%\usefonttheme{serif}
+%\useoutertheme{infolines}
+%\setbeamertemplate{background canvas}[vertical shading]
+%				     [bottom=red!10,top=blue!10]
+
+%---------- header setting ------------------------------------------------%
+% a flag that tells us how the circles should be drawn
+\newif\ifnavbeforecurrent
+% reset the flag before every navigation bar
+\pretocmd\insertnavigation{\navbeforecurrenttrue}{}{}
+
+% change the circle drawing code so that it changes based on the flag
+\defbeamertemplate*{mini frame in current subsection}{changing}[1][50]
+{%
+  \begin{pgfpicture}{0pt}{0pt}{0.1cm}{0.1cm}
+    \pgfpathcircle{\pgfpoint{0.05cm}{0.05cm}}{0.05cm}
+    \ifnavbeforecurrent
+        \pgfusepath{fill,stroke}
+    \else
+        \pgfusepath{stroke}
+    \fi
+  \end{pgfpicture}%
+}
+\setbeamertemplate{mini frame in current subsection}[changing]
+
+% after the circle for the current frame is drawn, change the flag
+\defbeamertemplate*{mini frame}{changing}
+{%
+  \begin{pgfpicture}{0pt}{0pt}{0.1cm}{0.1cm}
+    \pgfpathcircle{\pgfpoint{0.05cm}{0.05cm}}{0.05cm}
+    \pgfusepath{fill,stroke}
+  \end{pgfpicture}%
+  \global\navbeforecurrentfalse
+}
+\setbeamertemplate{mini frame}[changing]
+
+%---------- footer setting ------------------------------------------------%
+\makeatletter
+\setbeamertemplate{footline}
+{
+  \leavevmode%
+  \hbox{%
+  %\begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=2ex,center]{author in head/foot}%
+  %  \usebeamerfont{author in head/foot}%
+  %\insertshortauthor\hspace{1em}\beamer@ifempty{\insertshortinstitute}{}{(\insertshortinstitute)}
+  %\end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=2ex,left]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\hspace{1em}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=2ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}\insertshortdate{}\hspace*{2em}
+    \insertframenumber{}/\inserttotalframenumber\hspace*{2ex} 
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+\makeatother
+% no navigation bar
+\beamertemplatenavigationsymbolsempty
+% only page number version below
+%\setbeamertemplate{footline}[page number]
+
+% footnote setting
+\addtobeamertemplate{footnote}{\vspace{-6pt}\advance\hsize-0.5cm}{\vspace{6pt}}
+\makeatletter
+% Alternative A: footnote rule
+\renewcommand*{\footnoterule}{\kern -3pt \hrule \@width 2in \kern 8.6pt}
+% Alternative B: no footnote rule
+% \renewcommand*{\footnoterule}{\kern 6pt}
+\makeatother
+
+{\setbeamertemplate{background canvas}{%
+  %\begin{picture}(0,0)
+  %  \put(302,-240){
+  %    \includegraphics[width=0.15\paperwidth]{owl.jpg}}
+  %\end{picture}}
+\frame{\titlepage}}}
+
+
+%---------- User-defined commands -----------------------------------------%
+\newcommand{\probkb}{\textsc{ProbKB}\xspace}
+\newcommand{\sherlock}{\textsc{Sherlock}\xspace}
+\newcommand{\holmes}{\textsc{Holmes}\xspace}
+\newcommand{\reverb}{\textsc{ReVerb}\xspace}
+\newcommand{\tuffy}{\textsc{Tuffy}\xspace}
+\newcommand{\felix}{\textsc{Felix}\xspace}
+\newcommand{\alchemy}{\textsc{Alchemy}\xspace}
+\newcommand{\blog}{\textsc{Blog}\xspace}
+\newcommand{\nell}{\textsc{Nell}\xspace}
+\newcommand{\probase}{\textsc{ProBase}\xspace}
+\newcommand{\textrunner}{\textsc{TextRunner}\xspace}
+\newcommand{\madden}{\textsc{MADden}\xspace}
+
+\definecolor{darkblue}{rgb}{0,0,0.6}
+\definecolor{darkred}{rgb}{0.6,0,0}
+
+\let\oldemph\emph
+\renewcommand{\emph}[1]{{\color{Blue}\oldemph{#1}}}
+\newcommand{\define}[1]{\textit{#1}}
+\newcommand{\strong}[1]{\textbf{#1}}
+
+\newcommand{\head}[1]{{\large\color{OliveGreen}#1\\[5pt]}}
+
+\theoremstyle{remark} % not italic in theorems
+\newtheorem{proposition}{Proposition}
+
+% algorithm commands
+\renewcommand{\algorithmicforall}{\textbf{foreach}}
+% declaration of the new block
+\algblock{ParFor}{EndParFor}
+% customising the new block
+\algnewcommand\algorithmicparfor{\textbf{for}}
+\algnewcommand\algorithmicpardo{\textbf{do in parallel}}
+\algnewcommand\algorithmicendparfor{\textbf{barrier end}}
+\algrenewtext{ParFor}[1]{\algorithmicparfor\ #1\ \algorithmicpardo}
+\algrenewtext{EndParFor}{\algorithmicendparfor}
+
+% lstlisting
+\definecolor{lightgray}{rgb}{0.98,0.98,0.98}
+\hypersetup{colorlinks,linkcolor=,urlcolor=Blue}
+
+\renewcommand{\ttdefault}{pcr}
+\lstset{
+  language=SQL,
+  basicstyle={\footnotesize\ttfamily},
+  numbers=none,
+  backgroundcolor=\color{lightgray},
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  keywordstyle={\bfseries\color{Blue}},
+  commentstyle={\color{Red}\textit},
+  stringstyle=\color{Magenta},
+  frame=single,
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=4
+}
+
+%---------- Contents -----------------------------------------------------------%
+\AtBeginSection[]
+{
+  \begin{frame}
+    \frametitle{Outline}
+    \tableofcontents[currentsection,hideothersubsections] 
+  \end{frame}
+}
+
+%% \AtBeginSubsection[]
+%% {
+%%  \begin{frame}
+%%    \frametitle{Outline}
+%%    \tableofcontents[currentsection,currentsubsection]
+%%  \end{frame}
+%% }
+
+%\newlength{\wideitemsep}
+%\setlength{\wideitemsep}{\itemsep}
+%\addtolength{\wideitemsep}{5pt}
+%\let\olditem\item
+%\renewcommand{\item}{\setlength{\itemsep}{\wideitemsep}\olditem}
+
+%---------- Authors, title, etc ------------------------------------------------%
+\title[GraphLab Distributed Machine Learning]%(optional, only for long titles)
+{GraphLab Parallel and Distributed Machine Learning}
+\author % (optional, for multiple authors)
+{Yang~Chen\\{\footnotesize\url{yang@cise.ufl.edu}}}
+\institute[University of Florida] % (optional)
+{
+  Computer and Information Science and Engineering\\
+  University of Florida\\
+}
+\date{Jan 24, 2013} % (optional)
+\logo{\includegraphics[width=3cm]{logo.pdf}}
+
+\begin{document}
+
+\maketitle
+
+%---------- Introduction -------------------------------------------------------%
+\section{Introduction}
+\subsection{Introduction}
+
+%---------- slide --------------------------------------------------------------%
+\begin{frame}{MapReduce: Execution Model}
+\begin{figure}
+  \centering
+  \includegraphics[width=.75\textwidth]{mapreduce.pdf}
+\end{figure}
+\end{frame}
+
+%---------- slide --------------------------------------------------------------%
+\begin{frame}{Problems with MapReduce}
+\begin{itemize}
+  \item Iterative algorithms $\rightarrow$ \textbf{Spark}~\cite{zaharia2010spark}, \textbf{HaLoop}~\cite{bu2010haloop}
+  \item Aggregations $\rightarrow$ \textbf{GLADE (Datapath)}~\cite{rusu2012glade,arumugam2010datapath}
+  \item Interactive data processing $\rightarrow$ \textbf{Spark}, \textbf{(Google) Dremel}~\cite{melnik2010dremel}
+  \item Graph processing $\rightarrow$ \textbf{(Google) Pregel}~\cite{malewicz2010pregel}, \textbf{GraphLab}~\cite{low2010graphlab,low2012distributed}
+\end{itemize}
+\end{frame}
+
+%---------- slide --------------------------------------------------------------%
+{\setbeamertemplate{background canvas}{
+\put(100,80){\parbox[c][\paperheight][c]{\paperwidth}{{\transparent{1.0}\includegraphics[width=.7\paperwidth,height=.6\paperheight]{glade.pdf}}}}}
+\begin{frame}{GLA vs MapReduce}
+\parbox{.3\paperwidth}{\scriptsize
+\emph{Aggregate computation} difficult to express:
+\begin{itemize}
+  \item Extra merging job
+  \item Singel Reducer
+  \item Extra communication
+\end{itemize}}\\
+\vspace{3.8cm}
+\footnotesize Datapath is an open-source project developed at UF\footnote{\url{http://datapath.googlecode.com}}.
+\end{frame}
+}
+
+%---------- slide --------------------------------------------------------------%
+\begin{frame}{Graph Computations}
+\begin{columns}
+  \begin{column}{.5\textwidth}
+    \includegraphics[width=\columnwidth]{socialnet.jpg}
+  \end{column}
+  \begin{column}{.5\textwidth}
+    \includegraphics[width=1.5cm]{graphsearch.jpg}~~
+    \includegraphics[width=3cm]{webgraph.jpg}\\
+    \includegraphics[width=4cm]{sensornet.jpg}
+  \end{column}
+\end{columns}
+\end{frame}
+
+%---------- slide --------------------------------------------------------------%
+\begin{frame}{Graph Computations}
+\begin{columns}
+  \begin{column}{.5\textwidth}
+    \includegraphics[width=\columnwidth]{linkdata.jpg}\\
+    \includegraphics[width=\columnwidth]{kowledgegraph.jpg}
+  \end{column}
+  \begin{column}{.5\textwidth}
+    Why not MapReduce?
+    \begin{itemize}
+      \item Not good at graph algorithms (multiple stages $\rightarrow$ lots of overhead)
+      \item Sometimes have to be bend and twist problems into unnatural forms.
+    \end{itemize}
+    Existing graph libraries? (e.g. LEDA, Boost graph library)
+    \begin{itemize}
+      \item Not scalable (billions of vertices)
+    \end{itemize}
+  \end{column}
+\end{columns}
+\end{frame}
+
+%---------- slide --------------------------------------------------------------%
+\begin{frame}{Pregel}
+\begin{columns}
+  \begin{column}{.5\textwidth}
+    \includegraphics[width=\columnwidth]{bsp.pdf}
+  \end{column}
+  \begin{column}{.5\textwidth}
+    Pregel: Large-Scale graph processing at Google~\cite{malewicz2010pregel}\footnotemark:
+    \begin{itemize}
+      \item Bulk Synchronous Parallel model~\cite{valiant1990bridging}.
+      \item Slow jobs slow down the whole process.
+    \end{itemize}
+  \end{column}
+\end{columns}
+\footnotetext{For an open-source implementation, see \href{http://incubator.apache.org/giraph}{Apache Giraph}.}
+\end{frame}
+
+%---------- slide --------------------------------------------------------------%
+\begin{frame}{GraphLab}
+\begin{itemize}\itemsep10pt
+\item GraphLab~\cite{low2010graphlab,low2012distributed} is a parallel framework designed specifically for ML:
+  \begin{itemize}
+    \item Graph dependencies
+    \item Iterative
+    \item Asynchronous
+    \item Dynamic
+  \end{itemize}
+\item Simplifies design of parallel programs:
+  \begin{itemize}
+    \item Abstract away hardware issues
+    \item Automatic data synchronization
+    \item Addresses multiple hardware architectures
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+%---------- slide --------------------------------------------------------------%
+\begin{frame}{GraphLab}
+\begin{figure}
+  \includegraphics[width=\textwidth]{overview.pdf}
+\end{figure}
+\end{frame}
+
+%---------- slide --------------------------------------------------------------%
+\section{GraphLab Abstractions}
+\subsection{Data Graph}
+\begin{frame}{Data Graph}
+A data graph $G=(V,E,D)$ encodes the problem specific \emph{sparse computational structure} and directly modifiable program state.
+\begin{columns}
+  \begin{column}{0.6\textwidth}
+    \begin{itemize}
+      \item Vertex data: $\{D_v|v\in V\}$
+      \item Edge data: $\{D_{u\rightarrow v}|\{u,v\}\in E\}$
+      \item $v$'s scope $\mathcal{S}_v$ is defined to be $v$, its adjacent edges and neighboring vertices.
+    \end{itemize}
+  \end{column}
+  \begin{column}{0.4\textwidth}
+    \begin{figure}
+      \centering
+      \includegraphics[width=\textwidth]{datagraph.pdf}
+    \end{figure}
+  \end{column}
+\end{columns}
+\end{frame}
+
+%---------- slide --------------------------------------------------------------%
+\begin{frame}
+\begin{columns}
+  \begin{column}{0.5\textwidth}
+    \begin{example}[PageRank]
+      \begin{itemize}
+        \item Each vertex corresponds to a web page.
+        \item $D_v$ stores $R_v$, the current estimate of the PageRank.
+        \item $D_{u\rightarrow v}$ stores $w_{u,v}$, the directed weight of the link.
+      \end{itemize}
+    \end{example}
+  \end{column}
+  \begin{column}{0.5\textwidth}
+    \includegraphics[width=\columnwidth]{pagerank.pdf}
+  \end{column}
+\end{columns}
+\end{frame}
+
+%---------- slide --------------------------------------------------------------%
+\subsection{Update Functions}
+\begin{frame}{Update Functions}
+\textbf{Update:} $f(v,\mathcal{S}_v)\rightarrow (\mathcal{S}_v, \mathcal{T})$
+\begin{itemize}
+  \item $S_v$: The scope of $v$, the data stored in $v$ and its neighboring vertices and edges.
+  \item $\mathcal{T}$: The task set, which includes future task executions. $\mathcal{T}$ contains tuples of the form $(f, v)$.
+\end{itemize}
+The update function mechanism allows for asynchronous computation on the sparse dependencies defined by the data graph.
+\end{frame}
+
+%---------- slide --------------------------------------------------------------%
+\begin{frame}[fragile]{Update Functions}
+\begin{example}[PageRank]
+\begin{algorithm}[H]
+  \caption{PageRank update function}\label{alg:pagerank}
+  \begin{algorithmic}
+    \State\textbf{Input}: Vertex data $R(v)$ from $\mathcal{S}_v$
+    \State\textbf{Input}: Edge data $\{w_{u,v}|u\in\mathcal{N}(v)\}$ from $\mathcal{S}_v$
+    \State\textbf{Input}: Neighbor vertex data $\{R(u)|u\in\mathcal{N}(v)\}$ from $\mathcal{S}_v$
+    \State $R_{\text{old}}(v)\gets R(v)$ \Comment{Save old PageRank}
+    \State $R(v)\gets\alpha/n$
+    \ForAll{$u\in\mathcal{N}(v)$} \Comment{Loop over neighbors}
+      \State$R(v)\gets R(v)+(1-\alpha\times w_{u,v}\times R(u)$
+    \EndFor
+    \If{$\lvert R(v)-R_{\text{old}}(v)>\epsilon\rvert$}
+      \State\Return $\{u|u\in\mathcal{N}(v)\}$ \Comment{Schedule neighbors to be updated}
+    \EndIf
+    \State\textbf{Output}: Modified scope $\mathcal{S}_v$ with new $R(v)$
+  \end{algorithmic}
+\end{algorithm}
+\end{example}
+\end{frame}
+
+%---------- slide --------------------------------------------------------------%
+\begin{frame}[fragile]{Execution Model}
+Simple loop semantics
+\begin{algorithm}[H]
+  \caption{GraphLab Execution Model}\label{alg:execution}
+  \begin{algorithmic}
+    \State\textbf{Input}: Data graph $G=(V,E,D)$
+    \State\textbf{Input}: Initial vertex set $\mathcal{T}=\{v_1,v_2,\ldots\}$
+    \While{$\mathcal{T}$ is not empty}
+      \State $v\gets $\texttt{RemoveNext}($\mathcal{T}$)
+      \State $(\mathcal{T}',\mathcal{S}_v)\gets f(v,\mathcal{S}_v)$
+      \State $\mathcal{T}\gets\mathcal{T}\cup\mathcal{T}'$ 
+    \EndWhile
+    \State\textbf{Output}: Modified data graph $G=(V,E,D')$
+  \end{algorithmic}
+\end{algorithm}
+\end{frame}
+
+%---------- slide --------------------------------------------------------------%
+\subsection{Sequential Consistency Models}
+\begin{frame}{Sequential Consistency Models}
+\begin{definition}[Sequential Consistency]
+A GraphLab program is \emph{sequentially consistent} if for every parallel execution, there exists a sequential execution of update functions that produces an equivalent result.
+\end{definition}
+\begin{proposition}
+GraphLab guarantees sequential consistency under the following three conditions:
+\begin{enumerate}
+  \item The \emph{full consistency} model is used.
+  \item The \emph{edge consistency} model is used and update functions do not modify data in adjacent vertices.
+  \item The \emph{vertex consistency} model is used and update functions only access local vertex data.
+\end{enumerate}
+\end{proposition}
+\end{frame}
+
+%---------- slide --------------------------------------------------------------%
+\begin{frame}{Sequential Consistency Models}
+\begin{figure}
+  \centering
+  \includegraphics[clip,trim=0 8 0 0,width=\textwidth]{consistency.pdf}
+  \caption{GraphLab consistency models and parallelism.}
+\end{figure}
+\end{frame}
+
+%---------- slide --------------------------------------------------------------%
+\subsection{Global Values}
+\begin{frame}{Sync Operation and Global Values}
+\begin{definition}[Sync operation]
+The sync operation is defined as an associative commutative sum:
+$$Z=\texttt{Finalize}\left(\bigoplus_{v\in V}\texttt{Map}(\mathcal{S}_v)\right)$$
+\end{definition}
+\begin{itemize}
+  \item Runs continuously in the background to maintain updated estimates of the global value.
+\end{itemize}
+\begin{example}
+\texttt{VoteToHalt();}
+\end{example}
+\end{frame}
+
+%---------- slide --------------------------------------------------------------%
+\section{System Design}
+\begin{frame}{Overview}
+\begin{figure}
+  \centering
+  \includegraphics[width=\textwidth]{distgloverview.pdf}
+\end{figure}
+\begin{itemize}
+  \item Initialization: partitioning, loading
+  \item Execution: scheduling, locking, fault tolerance
+\end{itemize}
+\end{frame}
+
+%---------- slide --------------------------------------------------------------%
+\subsection{Distributed Data Graph}
+\begin{frame}{Distributed Data Graph}
+\begin{columns}
+  \begin{column}{0.5\textwidth}
+    Two-phase partitioning
+    \begin{enumerate}
+      \item Over-partition into \emph{atoms}.
+      \item Partition meta-graphs over physical machines
+    \end{enumerate}
+    \begin{itemize}
+      \item The graph is partitioned over machines using \emph{vertex separators}.
+    \end{itemize}
+  \end{column}
+  \begin{column}{0.4\textwidth}
+    \centering
+    \includegraphics[width=\columnwidth]{partition.jpg}
+  \end{column}
+\end{columns}
+\begin{itemize}
+  \item Each vertex which span multiple machines, has a \emph{master machine} (a black vertex), and all other instances of the vertex are \emph{ghosts/mirrors}.
+  \item The ghosts are used as \emph{caches} for their true counterparts across the network.
+\end{itemize}
+\end{frame}
+
+%---------- slide --------------------------------------------------------------%
+\subsection{Distributed GraphLab Engine}
+\begin{frame}{Distributed GraphLab Engine}
+  \begin{itemize}
+    \item Chromatic engine
+    \begin{itemize}
+      \item Each color-step executes vertices in same color.
+      \item Partially asynchronous.
+    \end{itemize}
+    \item Locking engine
+    \begin{itemize}
+      \item Non-blocking reader-writer lock to achieve pipelined locking.
+      \item Fully asynchronous.
+    \end{itemize}
+  \end{itemize}
+  The choice of execution engine affects performance and expressiveness.
+  \begin{figure}[htbp]
+    \centering
+    \subfigure{}
+      \includegraphics[width=.25\textwidth]{color.pdf}\hspace{.75in}
+    \subfigure{}
+      \includegraphics[width=.25\textwidth]{locks.jpg}
+  \end{figure}
+\end{frame}
+
+%---------- slide --------------------------------------------------------------%
+\subsection{Fault Tolerance}
+\begin{frame}{Fault Tolerance: Distributed Checkpointing}
+\begin{algorithm}[H]\footnotesize
+  \caption{Chandy-Lamport Distributed Snap-Shot}
+  \begin{algorithmic}
+    \State\textbf{Input}: vertex $v$
+    \If{$v$ was already snapshotted}
+      \State \texttt{Quit}
+    \EndIf
+    \State Save $D_v$ \Comment{Save current vertex}
+    \ForAll{$u\in\mathcal{N}(v)$}
+      \If{$u$ was not snapshotted}
+        \State Save $D_{uv}$
+        \State \texttt{Schedule} $u$ for a Snapshot Update
+      \EndIf
+    \EndFor
+    \State Mark $v$ as snapshotted
+  \end{algorithmic}
+\end{algorithm}
+\begin{itemize}
+\item Expressed as an update function.
+\item Guarantees a consistent snapshot under certain conditions.
+\end{itemize}
+\end{frame}
+
+%---------- slide --------------------------------------------------------------%
+\section{Applications}
+\begin{frame}{Applications}
+Graph processing, collaborative filtering, graphical models, cloud computer vision, topic modeling, etc.\footnote{See \url{http://graphlab.org} for source code access.}
+\begin{figure}
+  \centering
+  \subfigure{}
+    \includegraphics[width=2cm]{graph.jpg}\quad
+  \subfigure{}
+    \includegraphics[width=2cm]{cf.jpg}\quad
+  \subfigure{}
+    \includegraphics[width=4.5cm]{pgm.jpg}
+\end{figure}
+\begin{figure}
+  \subfigure{}
+    \includegraphics[width=3cm]{cv.jpg}\quad
+  \subfigure{}
+    \includegraphics[width=4cm]{topic.jpg}
+\end{figure}
+\end{frame}
+
+%---------- slide --------------------------------------------------------------%
+\subsection{Knowledge Expansion}
+\begin{frame}[fragile]{Knowledge Representation: Markov Logic Networks}
+We use \emph{Markov logic networks}~\cite{richardson2006markov} to represent domain knowledge:
+\mbox{\phantom{m}}\\[10pt]
+\begin{columns}
+  \begin{column}{.5\textwidth}\tiny
+    \centering
+    \begin{tabular}{cl}\toprule
+      \textbf{Weight} & \textbf{First-order logic}\\
+      \midrule
+      1.5 & $\forall x\texttt{ Sm}(x)\rightarrow\texttt{Ca}(x)$\\
+      1.1 & $\forall x,y\texttt{ Fr}(x,y)\rightarrow(\texttt{Sm}(x)\Leftrightarrow\texttt{Sm}(y))$\\
+      \bottomrule
+    \end{tabular}
+  \end{column}
+  \begin{column}{.5\textwidth}
+    A set of constants $C=\{$\textbf{Anna} $(A)$, \textbf{Bob} $(B)$$\}$
+  \end{column}
+\end{columns}
+\mbox{\phantom{m}}\\[10pt]
+\begin{columns}
+  \begin{column}{.5\textwidth}\small
+The Markov logic network is used to generate a \emph{Markov network} (factor graph)~\cite{koller2009probabilistic,kschischang2001factor,wick2010scalable} that defines a probability distribution among explicit and inferred knowledge.
+  \end{column}
+  \begin{column}{.5\textwidth}
+    \includegraphics[width=\columnwidth]{mn.pdf}
+  \end{column}
+\end{columns}
+\end{frame}
+
+%---------- slide --------------------------------------------------------------%
+\begin{frame}{Markov Network Inferece}
+Marginal Inference--Computing Probabilities
+\begin{itemize}
+\item The Markov random field defines a probability distribution on all nodes in it:
+$$P(\mathbf{X}=\mathbf{x})=\frac{1}{Z}\exp\left(\sum_iw_in_i(\mathbf{x})\right),$$
+where $n_i$ is the number of ground clauses that satisfy clause $i$ in the MLN and $w_i$ is the weight of that clause. $Z$ is a normalizer, also called the \emph{partition function}.
+\item In general, this is intractable due to $Z$. We use \emph{sampling methods} to approximate the probabilities.
+\end{itemize}
+\end{frame}
+
+%---------- slide --------------------------------------------------------------%
+\begin{frame}{Gibbs Sampling--A Quick Primer}
+Suppose a random vector $(W,X,Y,Z)\sim f(w,x,y,z)$. The Gibbs sampler samples each of $W,X,Y,Z$ in turn:
+\begin{columns}
+  \begin{column}{.7\textwidth}
+    \begin{align}
+      w_i\sim & f(w|x=x_{i-1}, y=y_{i-1}, z=z_{i-1})\nonumber\\
+      x_i\sim & f(x|w=w_i, y=y_{i-1}, z=z_{i-1})\nonumber\\
+      y_i\sim & f(y|w=w_i, x=x_i, z=z_{i-1})\nonumber\\
+      z_i\sim & f(z|w=w_i, x=x_i, y=y_i)\nonumber
+    \end{align}
+  \end{column}
+  \begin{column}{.3\textwidth}
+    \includegraphics[width=\columnwidth]{gibbs.jpg}
+  \end{column}
+\end{columns}
+\vspace*{8pt}
+for $i$ from 1 to a user-specified number $N$.
+\end{frame}
+
+%---------- slide --------------------------------------------------------------%
+\begin{frame}{Gibbs Vertex Update Model}
+\begin{columns}
+  \begin{column}{.65\textwidth}
+    \begin{proposition}[Markov networks \emph{locality property}]
+    A variable $X_i$ is conditionally independent of all other variables given its neighbors (\emph{Markov blanket}):
+    $$\pi(X_i|\mathbf{X}_{\mathcal{N}_i})=\pi(X_i|\mathbf{X}_{-i})$$
+    \end{proposition}
+  \end{column}
+  \begin{column}{.25\textwidth}
+    \includegraphics[width=\columnwidth]{markovblanket.png}
+  \end{column}
+\end{columns}
+Therefore, in each sample step, a vertex has to read from its neighbors and write to itself. This fits into GraphLab's \emph{edge consistency model}.
+\end{frame}
+
+%---------- slide --------------------------------------------------------------%
+{\setbeamertemplate{background canvas}{
+\parbox[c][\paperheight][b]{\paperwidth}{\raggedright{\transparent{0.4}\includegraphics[width=.3\paperwidth]{chromatic.jpg}}}}
+\begin{frame}[fragile]{The Chromatic Sampler}
+\begin{algorithm}[H]
+  \caption{The Chromatic Sampler}
+  \begin{algorithmic}
+    \State\textbf{Input}: $k$-colored Markov network
+    \For{Colors $\kappa_i$: $i\in\{1\ldots k\}$}
+      \ParFor{Variables $X_j\in\kappa_i$ in the $i^{\text{th}}$ color}
+        \State Ececute Gibbs Update: $$X_j^{(t+1)}\sim f\left(x_j^{(t+1)}|\mathbf{x}_{\mathcal{N}_j\in\kappa<i}^{(t+1)},\mathbf{x}_{\mathcal{N}_j\in\kappa>i}^{(t)}\right)$$
+      \EndParFor
+    \EndFor
+  \end{algorithmic}
+\end{algorithm}
+\end{frame}
+}
+
+%---------- slide --------------------------------------------------------------%
+\begin{frame}{The Chromatic Sampler}
+\begin{theorem}
+Given $p$ processors and a $k$-coloring of an $n$-variable MRF, the Chromatic sampler is ergodic and generates a new joint sample in running time:
+$$O\left(\frac{n}{p}+k\right)$$
+\end{theorem}
+\begin{proof}
+See~\cite{gonzalez2011parallel}.
+\end{proof}
+\end{frame}
+
+%---------- slide --------------------------------------------------------------%
+\begin{frame}{Experiments}
+\centering
+\includegraphics[width=\textwidth]{results.pdf}~\footnote{\tuffy,\felix~\cite{niu2011tuffy,niu2011felix}}
+\end{frame}
+
+%---------- slide --------------------------------------------------------------%
+\begin{frame}{Natural Language Processing}
+A similar idea can be applied to \emph{conditional random fields}~\cite{sutton2006introduction}.
+\begin{figure}
+  \centering
+  \includegraphics[width=.8\textwidth]{crf.pdf}
+  \caption{A conditional random field is a special Markov network where some nodes are \emph{observed} (text words). Therefore, it also fits into the edge-consistency model.}
+\end{figure}
+\end{frame}
+
+
+%---------- slide --------------------------------------------------------------%
+\section{Conclusion}
+\subsection{Conclusion}
+\begin{frame}{Conclusion}
+\begin{itemize}
+  \item GraphLab is a MapReduce improvement specially designed for iterative ML tasks.
+  \item GraphLab is good at graph iterative algorithms, e.g. PageRank.
+\end{itemize}
+\end{frame}
+
+
+%---------- slide --------------------------------------------------------------%
+\subsection{Discussion}
+\begin{frame}{Discussion}
+\begin{itemize}
+  \item How many ML tasks be modeled as graph computations?
+  \item A guideline to pick the right tool? MapReduce, Datapath, Pregel, GraphLab, Spark, etc.
+  \begin{itemize}
+    \item \cite{lin2012mapreduce} gives us both an academic and engineering point of view.
+  \end{itemize}
+  \item In-memory implementation still has its limitations. How does this compare to in-database analytics?
+\end{itemize}
+\end{frame}
+
+
+%---------- slide --------------------------------------------------------------%
+\section{References}
+\subsection{References}
+\begin{frame}[allowframebreaks]{References}
+  \bibliographystyle{alpha}
+  \bibliography{graphlab.bib}
+\end{frame}
+
+\end{document}

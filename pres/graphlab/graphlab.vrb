@@ -1,0 +1,11 @@
+\frametitle {The Chromatic Sampler}\begin {algorithm}[H]
+  \caption{The Chromatic Sampler}
+  \begin{algorithmic}
+    \State\textbf{Input}: $k$-colored Markov network
+    \For{Colors $\kappa_i$: $i\in\{1\ldots k\}$}
+      \ParFor{Variables $X_j\in\kappa_i$ in the $i^{\text{th}}$ color}
+        \State Ececute Gibbs Update: $$X_j^{(t+1)}\sim f\left(x_j^{(t+1)}|\mathbf{x}_{\mathcal{N}_j\in\kappa<i}^{(t+1)},\mathbf{x}_{\mathcal{N}_j\in\kappa>i}^{(t)}\right)$$
+      \EndParFor
+    \EndFor
+  \end{algorithmic}
+\end{algorithm}

@@ -1,0 +1,81 @@
+% This template from http://www.vel.co.nz
+
+% This is a LaTeX version of the sample laboratory report
+% from Virginia Tech's copyrighted 08-09 CHEM 1045/1046 lab manual.
+% Reproduction of this one appendix section for academic purposes
+% should fall under fair use.
+
+\documentclass[a4paper]{article}
+
+\usepackage{fancyhdr}
+\usepackage{setspace}
+\usepackage{lastpage}
+\usepackage{pdfpages}
+
+\oddsidemargin = 0pt
+\topmargin = -20pt
+\headheight = 12pt
+\headsep = 25pt
+\textheight = 670pt
+\textwidth = 460pt
+\marginparsep = 10pt
+\marginparwidth = 35pt
+\footskip = 30pt
+\marginparpush = 7pt
+\hoffset = 0pt
+\voffset = 0pt
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+
+\begin{document}
+
+% Setup the header and footer
+\pagestyle{fancy}                                                       %
+\lhead{Yang Chen}                                                       %
+%\chead{\hmwkClass} (\hmwkClassInstructor\ \hmwkClassTime): \hmwkTitle} %
+\chead{Literature Review}
+\rhead{Page\ \thepage\ of\ \protect\pageref{LastPage}}                  %
+\lfoot{}                                                      %
+\cfoot{}                                                                %
+%\rfoot{Page\ \thepage\ of\ \protect\pageref{LastPage}}                  %
+\renewcommand\headrulewidth{0.4pt}                                      %
+%\renewcommand\footrulewidth{0.4pt}                                      %
+
+\renewcommand{\title}[1]{\begin{center}
+\Large\textbf{#1}
+\end{center}}
+
+\title{Optimizing MPF Queries: Decision Support and\\ Probabilistic Inference}
+
+This paper proposes using relational MPF queries to support probabilistic inference and decision making. This proposal is based on the observation that a general query on a factorized probabilistic model could be simplified by pushing the summations into the products. This corresponds to pushing aggregation operators into a join sequence in the context of the relational model. Hence, using relational MPF queries to express probabilistic inference tasks, we're able to leverage and extend the database optimization techniques to support probabilistic inference and achieve scalability.
+
+
+\section*{Merits}
+\begin{itemize}
+\item[\textbf{S1}]
+The connection between MPF query processing and probabilistic inference observed in this paper is profound. Probabilistic inference is an important aspect of data analytics and statistics; leveraging database techniques allows us to achieve scalability and perform complex tasks.
+
+\item[\textbf{S2}]
+This paper provides readers with great technical explanations of query optimizing processing (CS) and how they can be used to optimize probabilistic queries (VE). The crucial observation is that aggregations and joins from relation algebra map to marginalizations and products in probabilistic inference. The authors developed a set of algorithms based on this observation and gave us both theoretical and experimental results showing their benefits under different circumstances. This is even worth further discussion on databases' native support for data analytics tasks.
+
+\item[\textbf{S3}]
+The authors are insightful enough to use their model to support decision making. In fact, since the model is general, they may support even more tasks than discussed, e.g, image segmentation, medical diagnosis, etc.
+\end{itemize}
+
+\section*{Concerns}
+\begin{itemize}
+\item[\textbf{W1}] 
+Though the authors mentioned ``such as Variable Elimination (VE) and Belief Propagation (BP) from the probabilistic inference literature'' in the abstract, only variable elimination is discussed in the paper. However, BP is often more efficient (e.g. when the junction tree width is large) and thus more widely adopted. Since it is not apparent how BP fits into the relational model, it would be better if the authors discuss whether this poses a limitation on their approach, e.g. how difficult it is to combine BP and the relational model.
+
+\item[\textbf{W2}]
+When comparing the proposed algorithms (CS+, VE, VE+), the authors tried to validate the VE+ algorithm in terms of quality (plan space) and performance (optimization cost), but both aspects are not strong enough:
+\begin{itemize}
+\item They tried some theoretical analysis, but concluded with a gap between the plan spaces of VE+ and CS+. Though they made up for this point in their experiments, we don't have a solid guarantee of how often VE+ is optimal and how large this theoretical gap is.
+\item In Section 4.5 Theorem 3, they compared they constructed a star example and analyzed the \emph{worst-case} optimization cost of VE and CS+. This is not sufficient since they also need to show the average case and include VE+.
+\end{itemize}
+
+\item[\textbf{W3}]
+The experiments supporting VE+ are not strong. In Section 5.2, the authors showed that VE+ only \emph{sometimes} yielded the optimal plan but did not mention how often it is the case, and in Section 5.4, the planning time did not differ so much (around 0.1 seconds). Moreover, they did not mention whether VE+ actually output the optimal plan when it ran faster. If it did not, the actual query time might even be more significant than the saved plan time.
+\end{itemize}
+
+\end{document}

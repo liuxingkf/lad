@@ -1,9 +1,18 @@
-7. \textbf{(4 pt) Binary Search.}
-
-A binary search finds the position of a value in a sorted array. The basic idea is to compare the value with the middle element of the array.
-
-\begin{itemize}
-\item If the target value is less than the middle element, then the left half of the array is searched.
-\item If the target value is greater, then the right half is searched.
-\item Otherwise, the target value is matched and the middle index is returned.
-\end{itemize}
+\frametitle {Grounding}A single \stt{JOIN} operation handles all rules of type
+$$
+p(x: c_1, y: c_2)\leftarrow q(x: c_1, z: c_3), r(z: c_3, y: c_2)
+$$
+\lstset{
+  language=SQL,
+  morekeywords=[2]{mln,relations,instances},
+  keywordstyle=[2]{\color{OliveGreen}},
+}
+\begin{lstlisting}
+SELECT DISTINCT mln.head AS head, mln.body1 AS body1, mln.body2 AS body2, r1.ent1 AS ent1, r1.ent2 AS ent2, r2.ent2 AS ent3
+FROM relations r1, mln, relations r2, relations r3, instances i1, instances i2, instances i3
+WHERE r1.pred = mln.head AND r2.pred = mln.body1 AND r3.pred = mln.body2
+AND r1.ent1 = r2.ent1 AND r1.ent2 = r3.ent2 AND r2.ent2 = r3.ent1
+AND i1.ent = r1.ent1 AND i1.class = mln.class1
+AND i2.ent = r1.ent2 AND i2.class = mln.class2
+AND i3.ent = r2.ent2 AND i3.class = mln.class3
+\end{lstlisting}

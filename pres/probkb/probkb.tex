@@ -12,8 +12,11 @@
 \usepackage{multimedia}
 %\usepackage{beamerthemeshadow}
 \usepackage{amsmath,amsfonts,amsthm,amssymb}
-\usepackage{algpseudocode}
+\usepackage[noend]{algpseudocode}
 \usepackage{algorithm}
+\usepackage{algorithmicx}
+\usepackage{transparent} % transparent background
+\usepackage{etoolbox}
 
 \usetheme{Singapore}
 %\usefonttheme{serif}
@@ -21,15 +24,79 @@
 %\setbeamertemplate{background canvas}[vertical shading]
 %				     [bottom=red!10,top=blue!10]
 
-\setbeamertemplate{example begin}
-{%
-  \inserttheoremheadfont \scshape
-  \inserttheoremname \inserttheoremnumber
-  \ifx\inserttheoremaddition\@empty\else\ (\inserttheoremaddition)\fi%
-  \inserttheorempunctuation
-  \normalfont
-}
+%---------- header setting ------------------------------------------------%
+% a flag that tells us how the circles should be drawn
+\newif\ifnavbeforecurrent
+% reset the flag before every navigation bar
+\pretocmd\insertnavigation{\navbeforecurrenttrue}{}{}
 
+% change the circle drawing code so that it changes based on the flag
+\defbeamertemplate*{mini frame in current subsection}{changing}[1][50]
+{%
+  \begin{pgfpicture}{0pt}{0pt}{0.1cm}{0.1cm}
+    \pgfpathcircle{\pgfpoint{0.05cm}{0.05cm}}{0.05cm}
+    \ifnavbeforecurrent
+        \pgfusepath{fill,stroke}
+    \else
+        \pgfusepath{stroke}
+    \fi
+  \end{pgfpicture}%
+}
+\setbeamertemplate{mini frame in current subsection}[changing]
+
+% after the circle for the current frame is drawn, change the flag
+\defbeamertemplate*{mini frame}{changing}
+{%
+  \begin{pgfpicture}{0pt}{0pt}{0.1cm}{0.1cm}
+    \pgfpathcircle{\pgfpoint{0.05cm}{0.05cm}}{0.05cm}
+    \pgfusepath{fill,stroke}
+  \end{pgfpicture}%
+  \global\navbeforecurrentfalse
+}
+\setbeamertemplate{mini frame}[changing]
+
+%---------- footer setting ------------------------------------------------%
+\makeatletter
+\setbeamertemplate{footline}
+{
+  \leavevmode%
+  \hbox{%
+  %\begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=2ex,center]{author in head/foot}%
+  %  \usebeamerfont{author in head/foot}%
+  %\insertshortauthor\hspace{1em}\beamer@ifempty{\insertshortinstitute}{}{(\insertshortinstitute)}
+  %\end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=2ex,left]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\hspace{1em}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=2ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}\insertshortdate{}\hspace*{2em}
+    \insertframenumber{}/\inserttotalframenumber\hspace*{2ex} 
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+\makeatother
+% no navigation bar
+\beamertemplatenavigationsymbolsempty
+% only page number version below
+%\setbeamertemplate{footline}[page number]
+
+%---------- footnote setting ------------------------------------------------
+\addtobeamertemplate{footnote}{\vspace{-6pt}\advance\hsize-0.5cm}{\vspace{6pt}}
+\makeatletter
+% Alternative A: footnote rule
+\renewcommand*{\footnoterule}{\kern -3pt \hrule \@width 2in \kern 8.6pt}
+% Alternative B: no footnote rule
+% \renewcommand*{\footnoterule}{\kern 6pt}
+\makeatother
+
+{\setbeamertemplate{background canvas}{%
+  %\begin{picture}(0,0)
+  %  \put(302,-240){
+  %    \includegraphics[width=0.15\paperwidth]{owl.jpg}}
+  %\end{picture}}
+\frame{\titlepage}}}
+
+%---------- User-defined commands -----------------------------------------%
 \newcommand{\probkb}{\textsc{ProbKB}\xspace}
 \newcommand{\sherlock}{\textsc{Sherlock}\xspace}
 \newcommand{\holmes}{\textsc{Holmes}\xspace}
@@ -53,7 +120,7 @@
 \newcommand{\strong}[1]{\textbf{#1}\xspace}
 \newcommand{\stt}[1]{\texttt{\small #1}\xspace}
 
-\newcommand{\head}[1]{{\large\color{OliveGreen}#1\\[5pt]}}
+\newcommand{\head}[1]{{\large\color{OliveGreen}#1\\[2pt]}}
 
 
 % declaration of the new block
@@ -103,30 +170,14 @@
 %%   \end{frame}
 %% }
 
-%% \defbeamertemplate*{footline}{infolines theme}
-%% {
-%%   \leavevmode%
-%%   \hbox{%
-%%   \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,right]{author in head/foot}%
-%%     \usebeamerfont{author in head/foot}Yang Chen\hspace*{3.15ex}
-%%   \end{beamercolorbox}%
-%%   \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,left]{title in head/foot}%
-%%     \usebeamerfont{title in head/foot}\hspace*{3.15ex}\insertshorttitle\hspace*{13em}
-%%     \insertframenumber{} / \inserttotalframenumber
-%%   \end{beamercolorbox}}%
-%%   \vskip0pt%
-%% }
-
-\setbeamertemplate{footline}[page number]
-
 %\newlength{\wideitemsep}
 %\setlength{\wideitemsep}{\itemsep}
 %\addtolength{\wideitemsep}{5pt}
 %\let\olditem\item
 %\renewcommand{\item}{\setlength{\itemsep}{\wideitemsep}\olditem}
 
-\title[COP3275]%(optional, only for long titles)
-{\probkb Large-Scale Probabilistic Knowledge Base}
+\title[\probkb Web-Scale Probabilistic Knowledge Base]%(optional, only for long titles)
+{\probkb Web-Scale\\Probabilistic Knowledge Base}
 \author % (optional, for multiple authors)
 {Yang~Chen\\{\footnotesize\url{yang@cise.ufl.edu}}}
 \institute[University of Florida] % (optional)
@@ -134,19 +185,12 @@
   Computer and Information Science and Engineering\\
   University of Florida\\
 }
-\date{Aug 29, 2012} % (optional)
+\date{Feb 22, 2012} % (optional)
 \logo{\includegraphics[width=3cm]{logo.pdf}}
 
 \begin{document}
 
-{\setbeamertemplate{background canvas}{%
-  %\begin{picture}(0,0)
-  %  \put(302,-240){
-  %    \includegraphics[width=0.15\paperwidth]{owl.jpg}}
-  %\end{picture}}
-\frame{\titlepage}}}
 \maketitle
-
 
 %---------- slide --------------------------------------------------%
 \section{Introduction}
@@ -322,25 +366,50 @@ A \emph{Markov logic network} (MLN)~\cite{richardson2006markov} is a set of form
 
 The result of grounding is a \emph{factor graph} (or \emph{Markov network}) from which we can infer marginal probabilities for individual facts.\\[15pt]
 
-\head{Challenges}
+\head{Key Challenges}
 \begin{itemize}
-  \item Memory-inefficient.
-  \item Large graphical models are hard to do inference.
+  \item Time-consuming, especially if the numbers of rules and entites are large.
+  \item Grounded network has an intractably large size, making inference tasks slow.
 \end{itemize}
 \end{frame}
 
 
 %---------- slide --------------------------------------------------%
 \begin{frame}{Markov Logic Inference}
-\head{Solutions to Large-Scale Grounding}
+\head{Scaling to the Web}
 \begin{itemize}
-  \item Using an RDBMS: leveraging mature query optimization techniques and possibly MPP frameworks (e.g. Greenplum).
-  \item Lazy inference~\cite{singla2006memory}: only ground \emph{active clauses}.
-  \item Ontology (typing): reducing the number of possible groundings.
-  \item First-order Horn clauses: easy to learn and do inference.
+  \item First-order Horn clauses:
+  \begin{itemize}
+    \item Avoids the need to enumerate ground atoms.
+    \item Stored as \emph{first-class} citizen in RDBMS, grounding expressed as a few \stt{Join}s.
+    \item Easier to learn than general first-order clauses.
+  \end{itemize}
+  \item Leveraging RDBMS query optimization techniques and possibly MPP frameworks (e.g. Greenplum).
+  \item Ontology (typing): reducing the number of possible groundings and improving accuracy.
 \end{itemize}
 \end{frame}
 
+%---------- slide --------------------------------------------------%
+\begin{frame}[fragile]{Grounding}
+A single \stt{JOIN} operation handles all rules of type
+$$
+p(x: c_1, y: c_2)\leftarrow q(x: c_1, z: c_3), r(z: c_3, y: c_2)
+$$
+\lstset{
+  language=SQL,
+  morekeywords=[2]{mln,relations,instances},
+  keywordstyle=[2]{\color{OliveGreen}},
+}
+\begin{lstlisting}
+SELECT DISTINCT mln.head AS head, mln.body1 AS body1, mln.body2 AS body2, r1.ent1 AS ent1, r1.ent2 AS ent2, r2.ent2 AS ent3
+FROM relations r1, mln, relations r2, relations r3, instances i1, instances i2, instances i3
+WHERE r1.pred = mln.head AND r2.pred = mln.body1 AND r3.pred = mln.body2
+AND r1.ent1 = r2.ent1 AND r1.ent2 = r3.ent2 AND r2.ent2 = r3.ent1
+AND i1.ent = r1.ent1 AND i1.class = mln.class1
+AND i2.ent = r1.ent2 AND i2.class = mln.class2
+AND i3.ent = r2.ent2 AND i3.class = mln.class3
+\end{lstlisting}
+\end{frame}
 
 %---------- slide --------------------------------------------------%
 \begin{frame}{Results}
@@ -363,7 +432,7 @@ We can ground the whole \sherlock-\holmes dataset the first two rounds in 10 min
 \end{frame}
 
 %---------- slide --------------------------------------------------%
-\begin{frame}{Markov Logic Inference}
+\begin{frame}{Inference}
 \head{Inference--Computing Probabilities}
 The Markov random field defines a probability distribution on all nodes in it:
 $$P(\mathbf{X}=\mathbf{x})=\frac{1}{Z}\exp\left(\sum_iw_in_i(\mathbf{x})\right),$$
@@ -372,7 +441,7 @@ where $n_i$ is the number of ground clauses that satisfy clause $i$ in the MLN a
 
 
 %---------- slide --------------------------------------------------%
-\begin{frame}{Markov Logic Inference}
+\begin{frame}{MCMC-MH}
 \head{Metropolis-Hastings (MH)}
 \begin{itemize}
   \item Exact inference: intractable due to $Z$.
@@ -390,7 +459,7 @@ where $n_i$ is the number of ground clauses that satisfy clause $i$ in the MLN a
 \begin{frame}{MCMC-MH Efficiency}
 \begin{figure}
   \centering
-  \includegraphics[clip,trim=50pt 280pt 50pt 30pt,width=\textwidth]{mcmc.pdf}
+  \includegraphics[width=.6\textwidth]{mcmc.pdf}
 \end{figure}
 \end{frame}
 
@@ -491,8 +560,40 @@ where $n_i$ is the number of ground clauses that satisfy clause $i$ in the MLN a
 %% \end{frame}
 
 %---------- slide --------------------------------------------------%
-\begin{frame}{\gist on Datapath}
+\begin{frame}{GraphLab Execution Model}
+\begin{algorithm}[H]\footnotesize
+  \caption{\footnotesize GraphLab Execution Model}\label{alg:execution}
+  \begin{algorithmic}
+    \State\textbf{Input}: Data graph $G=(V,E,D)$
+    \State\textbf{Input}: Initial vertex set $\mathcal{T}=\{v_1,v_2,\ldots\}$
+    \While{$\mathcal{T}$ is not empty}
+      \State $v\gets $\texttt{RemoveNext}($\mathcal{T}$)
+      \State $(\mathcal{T}',\mathcal{S}_v)\gets f(v,\mathcal{S}_v)$
+      \State $\mathcal{T}\gets\mathcal{T}\cup\mathcal{T}'$ 
+    \EndWhile
+    \State\textbf{Output}: Modified data graph $G=(V,E,D')$
+  \end{algorithmic}
+\end{algorithm}
 
+\begin{itemize}
+  \item Vertexes schedule execution of their neighbors.
+  \item Not applicable to general MCMC algorithms.
+\end{itemize}
+
+\end{frame}
+
+%---------- slide --------------------------------------------------%
+\begin{frame}{Datapath \gist}
+\head{Generalized Iterable State Transforms (GIST)}
+\begin{itemize}
+  \item GIST Performs \emph{transitions} upon a \emph{state} until that state has converged to the desired result.
+  \begin{description}
+    \item[Transition] MCMC Proposal function.
+    \item[State] Factor graph with its samples.
+  \end{description}
+  \item A user-defined local scheduler allows general MCMC proposal implementation.
+  \item The GIST state keeps track of the inference result.
+\end{itemize}
 \end{frame}
 
 %---------- slide --------------------------------------------------%
@@ -533,12 +634,12 @@ where $n_i$ is the number of ground clauses that satisfy clause $i$ in the MLN a
 \end{frame}
 
 %---------- slide --------------------------------------------------%
+\subsection{Incremental MCMC}
 \begin{frame}{Incremental MCMC}
 \head{Goal}
+\vspace{-6pt}
 \begin{itemize}
-  \item Evolve over time.
-  \item Learn from past samples.
-  \item Integrate new evidence.
+  \item EFBP~\cite{nath2010efficient} in a MCMC setting
 \end{itemize}
 
 \head{Incremental MCMC}
@@ -561,22 +662,22 @@ We adjust the distribution $p$ so that it focuses on newly added variables.
 \end{frame}
 
 %---------- slide --------------------------------------------------%
-\begin{frame}{MCMC Maintenance Results}
-\begin{columns}[c]
-  \column{0.46\textwidth}
-  \begin{figure}
-    \centering
-    \includegraphics[width=\linewidth]{inc1.pdf}
-  \end{figure}
+%% \begin{frame}{MCMC Maintenance Results}
+%% \begin{columns}[c]
+%%   \column{0.46\textwidth}
+%%   \begin{figure}
+%%     \centering
+%%     \includegraphics[width=\linewidth]{inc1.pdf}
+%%   \end{figure}
 
-  \column{0.46\textwidth}
-  \begin{figure}
-    \includegraphics[width=\linewidth]{inc2.pdf}
-  \end{figure}
-\end{columns}
+%%   \column{0.46\textwidth}
+%%   \begin{figure}
+%%     \includegraphics[width=\linewidth]{inc2.pdf}
+%%   \end{figure}
+%% \end{columns}
 
-\textit{Note:} This algorithm is still under development.
-\end{frame}
+%% \textit{Note:} This algorithm is still under development.
+%% \end{frame}
 
 %% %---------- slide --------------------------------------------------%
 %% \begin{frame}{Task Decomposition}
@@ -628,6 +729,16 @@ We adjust the distribution $p$ so that it focuses on newly added variables.
 
 
 %---------- slide --------------------------------------------------%
+\begin{frame}{Conclusions}
+\begin{itemize}
+  \item \probkb is a web-scale \textbf{PROB}abilistic \textbf{K}nowledge \textbf{B}ase with Markov logic network as the primary data model.
+  \item All extractions, including entities and rules, are stored in RDBMS as relational model, allowing efficient grounding algorithms.
+  \item In-database \gist operator allows parallel MCMC inference.
+  \item Incremental MCMC focuses computation on most recently added variables, speeding up convergence.
+\end{itemize}
+\end{frame}
+
+%---------- slide --------------------------------------------------%
 \begin{frame}{Questions?}
 \begin{center}
   \LARGE Thank you!
@@ -639,7 +750,7 @@ We adjust the distribution $p$ so that it focuses on newly added variables.
 \section{References}
 \subsection{References}
 \begin{frame}[allowframebreaks]{References}
-  \bibliographystyle{plain}
+  \bibliographystyle{alpha}
   \bibliography{probkb}
 \end{frame}
 

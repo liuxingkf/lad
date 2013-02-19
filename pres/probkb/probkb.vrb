@@ -1,0 +1,9 @@
+7. \textbf{(4 pt) Binary Search.}
+
+A binary search finds the position of a value in a sorted array. The basic idea is to compare the value with the middle element of the array.
+
+\begin{itemize}
+\item If the target value is less than the middle element, then the left half of the array is searched.
+\item If the target value is greater, then the right half is searched.
+\item Otherwise, the target value is matched and the middle index is returned.
+\end{itemize}

@@ -210,22 +210,22 @@ shared, searched and utilized.
 
 
 %---------- slide --------------------------------------------------%
-\begin{frame}{Knowledge bases--Introduction}
-\begin{columns}[c]
-  \column{0.46\textwidth}
-  \begin{figure}
-    \centering
-    \includegraphics[width=\linewidth]{eg1.png}
-  \end{figure}
-  \column{0.46\textwidth}
-  \begin{figure}
-    \centering
-    \includegraphics[width=\linewidth]{eg2.png}\\
-    \line(1,0){150}\\
-    \includegraphics[width=\linewidth]{eg3.png}
-  \end{figure}
-\end{columns}
-\end{frame}
+%% \begin{frame}{Knowledge bases--Introduction}
+%% \begin{columns}[c]
+%%   \column{0.46\textwidth}
+%%   \begin{figure}
+%%     \centering
+%%     \includegraphics[width=\linewidth]{eg1.png}
+%%   \end{figure}
+%%   \column{0.46\textwidth}
+%%   \begin{figure}
+%%     \centering
+%%     \includegraphics[width=\linewidth]{eg2.png}\\
+%%     \line(1,0){150}\\
+%%     \includegraphics[width=\linewidth]{eg3.png}
+%%   \end{figure}
+%% \end{columns}
+%% \end{frame}
 
 
 %---------- slide --------------------------------------------------%
@@ -251,19 +251,19 @@ shared, searched and utilized.
 
 
 %---------- slide --------------------------------------------------%
-\begin{frame}{Examples}
-\head{\nell}
-\nell~\cite{carlson2010toward} is a research project that attempts to create a computer system that learns over time to read the web.
-\begin{figure}
-  \centering
-  \includegraphics[width=.6\textwidth]{nell.png}
-\end{figure}
-Note that \nell produces uncertain results. This is typical among automatic extraction systems and is our major motivation to develop a large-scale probabilistic knowledge base.
-\end{frame}
+%% \begin{frame}{Examples}
+%% \head{\nell}
+%% \nell~\cite{carlson2010toward} is a research project that attempts to create a computer system that learns over time to read the web.
+%% \begin{figure}
+%%   \centering
+%%   \includegraphics[width=.6\textwidth]{nell.png}
+%% \end{figure}
+%% Note that \nell produces uncertain results. This is typical among automatic extraction systems and is our major motivation to develop a large-scale probabilistic knowledge base.
+%% \end{frame}
 
 
 %---------- slide --------------------------------------------------%
-\begin{frame}{Examples}
+\begin{frame}{Related Work}
 \head{\sherlock-\holmes}
 \begin{columns}[c]
   \column{0.45\textwidth}
@@ -283,7 +283,7 @@ Note that \nell produces uncertain results. This is typical among automatic extr
 
 
 %---------- slide --------------------------------------------------%
-\begin{frame}{Examples}
+\begin{frame}{Related Work}
 \head{\tuffy-\felix}
 The \tuffy-\felix~\cite{DBLP:journals/pvldb/NiuRDS11,2011arXiv1108.0294N} system is an Markov logic network~\cite{richardson2006markov} implementation that does large-scale probabilistic inference using an RDBMS.
 \begin{columns}[c]
@@ -308,24 +308,22 @@ The \tuffy-\felix~\cite{DBLP:journals/pvldb/NiuRDS11,2011arXiv1108.0294N} system
 \section{The \probkb System}
 \subsection{\probkb Architecture}
 \begin{frame}{Architecture}
-\begin{columns}
-  \begin{column}{.38\textwidth}
-    \footnotesize
-    \begin{itemize}
-      \item Extracted entities, facts, and rules stored as relational model.
-      \item Efficient grounding via a few relational operators.
-      \item Parallel MCMC inference implemented as \stt{GIST} operations.
-      \item Incremental inference: save computation by focusing on least convergent variables.
-    \end{itemize}
-  \end{column}
-
-  \begin{column}{.6\textwidth}
-    \centering
-    \includegraphics[clip,trim=30 0 15 0,width=\columnwidth]{probkbarch.pdf}
-  \end{column}
-\end{columns}
+\begin{figure}
+  \centering
+  \includegraphics[clip,trim=30 0 15 0,width=.7\textwidth]{probkbarch.pdf}
+\end{figure}
 \end{frame}
 
+%---------- slide --------------------------------------------------%
+\begin{frame}{Architecture}
+\head{Contributions}
+\begin{itemize}
+  \item A relation model for extracted entities, facts, and rules.
+  \item Efficient grounding via at most a few relational operators.
+  \item Parallel MCMC inference implemented as \stt{GIST} operations.
+  \item Incremental inference: saving computation by focusing on least convergent variables.
+\end{itemize}
+\end{frame}
 
 %---------- slide --------------------------------------------------%
 \subsection{Markov Logic}
@@ -352,7 +350,7 @@ A \emph{Markov logic network} (MLN)~\cite{richardson2006markov} is a set of form
 \end{columns}\vspace{-25pt}
 \begin{figure}
   \centering
-  \includegraphics[width=0.6\textwidth]{mrf.pdf}
+  \includegraphics[clip,trim=40 35 40 40,width=0.75\textwidth]{mrf.pdf}
   \caption{Grounded Markov network.}
   \label{fig:ground}
 \end{figure}
@@ -360,8 +358,7 @@ A \emph{Markov logic network} (MLN)~\cite{richardson2006markov} is a set of form
 
 
 %---------- slide --------------------------------------------------%
-\begin{frame}{Markov Logic Inference}
-\head{Grounding}
+\begin{frame}{Grounding}
 \emph{Grounding} is the process of substituting constants into MLN clauses.\\[5pt]
 
 The result of grounding is a \emph{factor graph} (or \emph{Markov network}) from which we can infer marginal probabilities for individual facts.\\[15pt]
@@ -375,7 +372,7 @@ The result of grounding is a \emph{factor graph} (or \emph{Markov network}) from
 
 
 %---------- slide --------------------------------------------------%
-\begin{frame}{Markov Logic Inference}
+\begin{frame}{Grounding}
 \head{Scaling to the Web}
 \begin{itemize}
   \item First-order Horn clauses:
@@ -412,7 +409,7 @@ AND i3.ent = r2.ent2 AND i3.class = mln.class3
 \end{frame}
 
 %---------- slide --------------------------------------------------%
-\begin{frame}{Results}
+\begin{frame}{Grounding Results}
 We can ground the whole \sherlock-\holmes dataset the first two rounds in 10 minutes using PostgreSQL, while the state-of-the-art implementation MLN (\tuffy~\cite{DBLP:journals/pvldb/NiuRDS11}) crashes during its grouding phase.
 \begin{table}
   \centering
@@ -432,35 +429,36 @@ We can ground the whole \sherlock-\holmes dataset the first two rounds in 10 min
 \end{frame}
 
 %---------- slide --------------------------------------------------%
-\begin{frame}{Inference}
-\head{Inference--Computing Probabilities}
-The Markov random field defines a probability distribution on all nodes in it:
-$$P(\mathbf{X}=\mathbf{x})=\frac{1}{Z}\exp\left(\sum_iw_in_i(\mathbf{x})\right),$$
-where $n_i$ is the number of ground clauses that satisfy clause $i$ in the MLN and $w_i$ is the weight of that clause. $Z$ is the normalization constant, also called the \emph{partition function}.
-\end{frame}
+%% \begin{frame}{Inference}
+%% \head{Inference--Computing Probabilities}
+%% The Markov random field defines a probability distribution on all nodes in it:
+%% $$P(\mathbf{X}=\mathbf{x})=\frac{1}{Z}\exp\left(\sum_iw_in_i(\mathbf{x})\right),$$
+%% where $n_i$ is the number of ground clauses that satisfy clause $i$ in the MLN and $w_i$ is the weight of that clause. $Z$ is the normalization constant, also called the \emph{partition function}.
+%% \end{frame}
 
 
 %---------- slide --------------------------------------------------%
-\begin{frame}{MCMC-MH}
-\head{Metropolis-Hastings (MH)}
-\begin{itemize}
-  \item Exact inference: intractable due to $Z$.
-  \item MCMC-MH: efficient since $Z$ cancels out.
-  \item MCMC-MH: only changed factors need to be considered~\cite{wick2010scalable}:
-\end{itemize}
-\begin{align}
-\frac{\pi(\mathbf{x})}{\pi(\mathbf{x'})}&=\frac{\frac{1}{Z}\prod_i\phi_i(\mathbf{x}_i)}{\frac{1}{Z}\prod_i\phi_i(\mathbf{x}_i')}\nonumber\\
-&=\frac{\prod_{i\text{ having }x_{(k)}}\phi_i(x_{(k)},\mathbf{x})}{\prod_{i\text{ having }x_{(k)}}\phi_i(x_{(k)}',\mathbf{x})}.\nonumber
-\end{align}
-\end{frame}
+%% \begin{frame}{Inference: MCMC-MH}
+%% $$P(\mathbf{X}=\mathbf{x})=\frac{1}{Z}\exp\left(\sum_iw_in_i(\mathbf{x})\right),$$
+%% \begin{itemize}
+%%   \item Exact inference: intractable due to $Z$.
+%%   \item MCMC-MH: efficient since $Z$ cancels out.
+%%   \item MCMC-MH: only changed factors need to be considered~\cite{wick2010scalable}:
+%% \end{itemize}
+%% \begin{align}
+%% \frac{\pi(\mathbf{x})}{\pi(\mathbf{x'})}&=\frac{\frac{1}{Z}\prod_i\phi_i(\mathbf{x}_i)}{\frac{1}{Z}\prod_i\phi_i(\mathbf{x}_i')}\nonumber\\
+%% &=\frac{\prod_{i\text{ having }x_{(k)}}\phi_i(x_{(k)},\mathbf{x})}{\prod_{i\text{ having }x_{(k)}}\phi_i(x_{(k)}',\mathbf{x})}.\nonumber
+%% \end{align}
+%% \end{frame}
 
 
 %---------- slide --------------------------------------------------%
-\begin{frame}{MCMC-MH Efficiency}
+\begin{frame}{Inference: MCMC-MH}
 \begin{figure}
   \centering
-  \includegraphics[width=.6\textwidth]{mcmc.pdf}
+  \includegraphics[width=.5\textwidth]{mcmc.pdf}
 \end{figure}
+Markov locality property allows for parallel computing.
 \end{frame}
 
 
@@ -629,37 +627,61 @@ where $n_i$ is the number of ground clauses that satisfy clause $i$ in the MLN a
 \begin{figure}
   \centering
   \caption{Inference over simulated factor graphs}
-  \includegraphics[width=.5\textwidth]{datapath.jpg}
+  \includegraphics[width=.7\textwidth]{datapath.jpg}
 \end{figure}
 \end{frame}
 
 %---------- slide --------------------------------------------------%
-\subsection{Incremental MCMC}
-\begin{frame}{Incremental MCMC}
-\head{Goal}
-\vspace{-6pt}
+\subsection{Incremental MCMC (Future Work)}
+\begin{frame}{Incremental MCMC (Future Work)}
+A natural challenge arising in automatic knowledge-base construction is continuously incoming information.
 \begin{itemize}
-  \item EFBP~\cite{nath2010efficient} in a MCMC setting
+  \item Expanding frontier belief propagation (EFBP)~\cite{nath2010efficient} for repeated inference;
+  \item Query-aware MCMC~\cite{wick2011queryaware} for query-spedific inference.
 \end{itemize}
-
-\head{Incremental MCMC}
-The incremental maintenance algorithm adopts the Query-aware MCMC~\cite{wick2011queryaware} technique:
+Following this line, we're trying to build an MCMC algorithm that:
 \begin{itemize}
-\item Assumption: not much new information is added to the knowledge base each time.
-\item Newly extracted knowledge serves as the query node.
-\item Maintaining samples for both old and new nodes.
+  \item Focuses computation on most recently added nodes.
+  \item Maintains previous samples to avoid repeated computation.
 \end{itemize}
 \end{frame}
 
 %---------- slide --------------------------------------------------%
-\begin{frame}{Incremental Maintenance of MCMC Samples}
-The incremental MCMC proposal function $T$ employs the following steps:
-\begin{enumerate}
-  \item Sample the variable index space according to some distribution $p$ reflecting influence of new nodes and recent sample behaviors.
-  \item Sample the selected variable according to some distribution $q$ over that variable's domain, leaving all other variables unchanged.
-\end{enumerate}
-We adjust the distribution $p$ so that it focuses on newly added variables.
+\begin{frame}{Incremental MCMC (Future Work)}
+\head{Challenges}
+\begin{itemize}
+  \item How to detect variables that are mostly affected by new ones.
+  \item The biased nature of incremental MCMC poses inbalance to the Datapath scheduler.
+\end{itemize}
 \end{frame}
+
+
+%% %---------- slide --------------------------------------------------%
+%% \begin{frame}{Incremental MCMC}
+%% \head{Goal}
+%% \vspace{-6pt}
+%% \begin{itemize}
+%%   \item EFBP~\cite{nath2010efficient} in a MCMC setting
+%% \end{itemize}
+
+%% \head{Incremental MCMC}
+%% The incremental maintenance algorithm adopts the Query-aware MCMC~\cite{wick2011queryaware} technique:
+%% \begin{itemize}
+%% \item Assumption: not much new information is added to the knowledge base each time.
+%% \item Newly extracted knowledge serves as the query node.
+%% \item Maintaining samples for both old and new nodes.
+%% \end{itemize}
+%% \end{frame}
+
+%% %---------- slide --------------------------------------------------%
+%% \begin{frame}{Incremental Maintenance of MCMC Samples}
+%% The incremental MCMC proposal function $T$ employs the following steps:
+%% \begin{enumerate}
+%%   \item Sample the variable index space according to some distribution $p$ reflecting influence of new nodes and recent sample behaviors.
+%%   \item Sample the selected variable according to some distribution $q$ over that variable's domain, leaving all other variables unchanged.
+%% \end{enumerate}
+%% We adjust the distribution $p$ so that it focuses on newly added variables.
+%% \end{frame}
 
 %---------- slide --------------------------------------------------%
 %% \begin{frame}{MCMC Maintenance Results}

@@ -1,0 +1,3 @@
+[submodule "probkb"]
+	path = probkb
+	url = git@github.com:arthurchy/probkb.git

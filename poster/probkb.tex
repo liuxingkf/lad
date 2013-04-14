@@ -23,6 +23,10 @@
 \usepackage{palatino}
 \usepackage{xspace}
 \usepackage{booktabs}
+\usepackage{listings}
+\usepackage{algpseudocode}
+\usepackage{algorithm}
+
 
 \newcommand{\captionfont}{\footnotesize}
 
@@ -70,6 +74,26 @@
 \setlength{\parsep}{0pt}%
 }
 
+\definecolor{lightgray}{rgb}{0.98,0.98,0.98}
+
+\renewcommand{\ttdefault}{pcr}
+\lstset{
+  language=SQL,
+  basicstyle={\footnotesize\ttfamily},
+  numbers=none,
+  backgroundcolor=\color{lightgray},
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  keywordstyle={\bfseries\color{blue}},
+  commentstyle={\color{red}\textit},
+  stringstyle=\color{magenta},
+  frame=single,
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=4
+}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Begin of Document
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -151,12 +175,12 @@
   % Eye Catcher
   {\includegraphics[height=3em]{images/graph_occluded.pdf}}
   % Title
-  {\vspace*{.3em}\bf{\underline{Topic Line 1}}\vspace{0.1em}
-      {\newline\Large\underline{Topic Line 2}}\vspace{0.1em}}
+  {\vspace*{.3em}\bf{\underline{ProbKB: Managing Web-Scale Knowledge}}\vspace{0.1em}
+      {\newline\Large\underline{CIS6930 LRG ADV DATA ANLY}}\vspace{0.1em}}
   % Authors
-  {\textsc{Author 1$^{\S}$, Author 2$^{\S}$, Author 3$^{\S}$\\[0.1em]
-                    {$^{\S}$\textit{(Organization), CISE, University of Florida} }}\\[0.1em]
-             {\textit{\textcolor{blue} {\{author1, author2, author3\} @cise.ufl.edu}}}}
+  {\textsc{Yang Chen$^{\S}$, Xing Liu$^{\S}$, \\[0.1em]
+                    {$^{\S}$\textit{CISE, University of Florida} }}\\[0.1em]
+             {\textit{\textcolor{blue} {\{yang,xinliu\} @cise.ufl.edu}}}}
   % University logo
   {% The makebox allows the title to flow into the logo, this is a hack because of the L shaped logo.
     \includegraphics[height=8.5em]{logo/UF_Signature_Themeline.pdf}
@@ -182,7 +206,15 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
       \newcommand{\compactlist}{\setlength{\itemsep}{0pt} \setlength{\parskip}{0pt} \setlength{\leftskip}{-1em}}
       
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+ProbKB, a PROBabilistic Knowledge Base constructed from web scale extracted
+entities, facts, and rules represented as a Markov logic network (MLN). 
+We achieved web scale MLN inference by designing a novel
+structured, relational model for MLNs and efficient grounding algorithms that apply rules
+in batches. Errors are handled in a principled
+and elegant manner to avoid unnecessary resource consumption. The inference task is
+delegated to GraphLab, a distributed framework designed specifically for machine learning problems. Our initial experiments show
+that our approach has much better scalability
+than the state-of-the-art.
     }
     
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -190,7 +222,8 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    \newcommand{\compactlist}{\setlength{\itemsep}{0pt} \setlength{\parskip}{0pt} \setlength{\leftskip}{-1em}}
     \begin{center}
-      \includegraphics[height=9em]{images/gears.png}
+ %\includegraphics[height=9em]{images/probkbarch.pdf}    
+  \includegraphics[height=18em]{images/probkbarch.pdf}
     \end{center}
     }
 
@@ -210,49 +243,126 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
 
 
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \headerbox{Acknowledgements}{name=myacknowledgements,column=0,below=challenges}{
+ % \headerbox{Acknowledgements}{name=myacknowledgements,column=0,below=challenges}{
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %      \includegraphics[width=0.85\linewidth]{T-labs-Drawing-1} 
-      \newcommand{\compactlist}{\setlength{\itemsep}{0pt} \setlength{\parskip}{0pt} \setlength{\leftskip}{-1em}}
+  %    \newcommand{\compactlist}{\setlength{\itemsep}{0pt} \setlength{\parskip}{0pt} \setlength{\leftskip}{-1em}}
     
-Acknowledgements including AWS credits.
+%Acknowledgements including AWS credits.
 
-          }
+    %      }
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\headerbox{Item1}{name=myourapproach,column=1,span=3,row=0}{
+\headerbox{Relational MLN Model}{name=myourapproach,column=1,span=3,row=0}{
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \newcommand{\compactlist}{\setlength{\itemsep}{0pt} \setlength{\parskip}{0pt} \setlength{\leftskip}{-1em}}
-  
-  \begin{multicols}{2}
-    Description.\\[1.5mm]
-    \textbf{Features}\vspace{-1.5mm}
-    \begin{itemize}\compactlist 
-      \item Feature 1.
-      \item Feature 2.
-      \item Feature 3.
-    \end{itemize}
-    \phantom{mmm}
 
-    \begin{tabular}{lp{6.5cm}}
-      \multicolumn{2}{c}{\textbf{Functions}}\\
-      \midrule
-      \textbf{Function 1} & Description 1.\\
-      \textbf{Function 2} & Description 2.\\ 
-      \textbf{Function 3} & Description 3. \\
-      \textbf{Function 4} & Description 4. \\
-    \end{tabular}
-  \end{multicols}
+  \begin{itemize}\compactlist
+     \item Put entities, facts, and rules into the database, so that the rules are applied in batches, and wrapped the grounding logic into stored procedures.
+     \item Considered Horn clauses only.Identify six rules pattern in SHERLOCK rules.Each rule type i has a table Mi recording the predicates involved in the rules of that type.
+     \item Another table R for relationships. For each relationship p(x, y) that is stated in the text corpus, we have a tuple (p, x, y) in R. 
+
+   \end{itemize}
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\headerbox{Item2}{name=myapproxstrmatch,column=1,span=3,below=myourapproach} {
+\headerbox{Grounding}{name=myapproxstrmatch,column=1,span=2,below=myourapproach} {
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
  
+  \newcommand{\compactlist}{\setlength{\itemsep}{0pt} \setlength{\parskip}{0pt} \setlength{\leftskip}{-1em}}
+  
+\begin{itemize}\compactlist
+     \item Used lazy inference and adopted a one-step look-ahead strategy: assume all
+atoms are inactive and compute active clauses. activate the atoms in the grounding result and recompute active clauses. 
+     
+
+
+     \item Assume rules of type 3 are stored in table M3 (p, q, r), and relationships p(x, y) are stored in R(p, x, y), then the
+following SQL query computes atoms that are activated during the grounding process ,this process is repeated until convergence, resulting
+in an active closure. The following SQL query then
+computes active clauses given the active atoms:
+
+  
+ \begin{lstlisting}[language=SQL]^^J
+SELECT DISTINCT ^^J
+R1.id AS id1, R2.id AS id2, R3.id AS id3 ^^J
+FROM M3 JOIN R R ON M3.p = R.p ^^J
+JOIN R R1 ON M3.q = R1.p ^^J
+JOIN R R2 ON M3.r = R2.p ^^J
+WHERE R.x = R1.x AND R.y = R2.x AND R1.y = R2.y ^^J 
+\end{lstlisting}
+
+
+
+
+   \item The result of grounding is a factor graph (Markov network). This graph encodes a probability distribution
+over its variable nodes, which can be used to answer
+user queries. We use TUFFY as comparison point. We tried to run ProbKB using the ReVerb-
+Sherlock dataset and measured the grounding time in 85 seconds whereas TUFFY crashes in this step.
+
+
+   \end{itemize}
+
+
 }
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\headerbox{Item3}{name=mycer,column=1,span=3,below=myapproxstrmatch}{
+\headerbox{Knowledge Integrity}{name=mycer1,column=3,span=1,below=myourapproach} {
+  \newcommand{\compactlist}{\setlength{\itemsep}{0pt} \setlength{\parskip}{0pt} \setlength{\leftskip}{-1em}}
+\begin{itemize}\compactlist
+\item Few common error patterns (ambiguity, meaningless relations, etc) that might affect learning quality. We use robust semi-naive evalution to emphasize the fact that inferences only occur among most correst facts and errors are unlikely to arise.
+    
+\begin{algorithmic}
+\State $candidates \gets all facts $
+\State $beliefs \gets promote( \varnothing ,candidates) $
+\State $delta = \varnothing $
+\Repeat 
+\State $promoter  \gets infer(beliefs,delta) $
+\State $beliefs  \gets beliefs \cup delta $
+\State $delta \gets \varnothing $
+\Until 
+
+\end{algorithmic}
+  
+
+\end{itemize}
 }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\headerbox{Inference}{name=mycer,column=1,span=3,below=myapproxstrmatch} {
+  \newcommand{\compactlist}{\setlength{\itemsep}{0pt} \setlength{\parskip}{0pt} \setlength{\leftskip}{-1em}}
+   
+ \begin{multicols}{2}
+
+\begin{itemize}\compactlist
+     \item Use MCMC algorithm to do the marginal inference in MLN. The results are the marginal probablity of grounding facts.
+
+     \item Our first approach is using Metropolis–Hastings algorithm with Datapath as our parallel engine. Partition the graph to subgraphs and runs the algorithm on each of them. We found this approach could break the Markov Logic Network if a factor is accross several subgraphs.  
+
+     \item Our second approach is to use a write lock on each variable on the factor graph and random walk on the whole graph instead of partition the graph, and collecting samples in parallel.  
+    
+     \item Because of performance and accuracy issue, Our lattest approach is that runs Gibbs sampling using GraphLab as our parallel engine.
+     \item We sampled a subset with 700 facts and compared the time spent on generating 200 joint samples for ProbKB and Tuffy. It took ProbKB 0.47 minute to complete the inference whereas TUFFY used 55 minutes.
+
+     
+   \end{itemize}
+
+ \begin{multicols}{2}
+\begin{center}
+ \includegraphics[height=9em]{images/R1.jpeg}  
+  \end{center} 
+\begin{center}
+ \includegraphics[height=9em]{images/R3.jpeg}  
+  \end{center} 
+ \end{multicols}{2}
+
+
+ \end{multicols}{2}
+
+
+}
+    
     
 \end{poster}
 

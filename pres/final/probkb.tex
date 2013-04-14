@@ -185,7 +185,7 @@
   Computer and Information Science and Engineering\\
   University of Florida\\
 }
-\date{Mar 12, 2013} % (optional)
+\date{Apr 9, 2013} % (optional)
 \logo{\includegraphics[width=3cm]{logo.pdf}}
 
 \begin{document}
@@ -197,8 +197,10 @@
 \subsection{Introduction}
 \begin{frame}{Knowledge bases--Introduction}
 \begin{itemize}
-  \item A \emph{knowledge base} is a collection of entities, facts, and relationships that conforms with a certain data model.
-  \item A knowledge base helps machines understand humans, languages, and the world.
+  \item A \emph{knowledge base} is a collection of entities, facts, and
+    relationships that conforms with a certain data model.
+  \item A knowledge base helps machines understand humans, languages,
+    and the world.
 \end{itemize}
 \begin{figure}
   \centering
@@ -298,7 +300,10 @@
 
 %---------- slide --------------------------------------------------%
 \begin{frame}{Markov Logic--Probabilistic Inference Framework}
-A \emph{Markov logic network} (MLN) is a set of formulae with weights. Together with a finite set of constants $C=\{c_1,\ldots,c_{\left\vert C\right\vert}\}$, it defines a Markov network.
+A \emph{Markov logic network} (MLN) is a set of formulae with
+weights. Together with a finite set of constants
+$C=\{c_1,\ldots,c_{\left\vert C\right\vert}\}$, it defines a Markov
+network.
 
 \begin{columns}[c]
   \column{0.48\textwidth}
@@ -330,14 +335,19 @@ A \emph{Markov logic network} (MLN) is a set of formulae with weights. Together 
 %---------- slide --------------------------------------------------%
 \subsection{Grounding}
 \begin{frame}{Grounding}
-\emph{Grounding} is the process of substituting constants into MLN clauses.\\[5pt]
+\emph{Grounding} is the process of substituting constants into MLN
+clauses.\\[5pt]
 
-The result of grounding is a \emph{factor graph} (or \emph{Markov network}) from which we can infer marginal probabilities for individual facts.\\[15pt]
+The result of grounding is a \emph{factor graph} (or \emph{Markov
+  network}) from which we can infer marginal probabilities for
+individual facts.\\[15pt]
 
 \head{Key Challenges}
 \begin{itemize}
-  \item Time-consuming, especially if the numbers of rules and entites are large.
-  \item Grounded network has an intractably large size, making inference tasks slow.
+  \item Time-consuming, especially if the numbers of rules and entites
+    are large.
+  \item Grounded network has an intractably large size, making inference
+    tasks slow.
 \end{itemize}
 \end{frame}
 
@@ -386,7 +396,8 @@ The result of grounding is a \emph{factor graph} (or \emph{Markov network}) from
 
 %---------- slide --------------------------------------------------%
 \begin{frame}{Markov Logic: A Relational Pointer of View}
-The grounding of \emph{ALL} rules of form $$p(x,y)\leftarrow q(x,z), r(z,y)$$ is then expressed as a relational operation:
+The grounding of \emph{ALL} rules of form $$p(x,y)\leftarrow q(x,z),
+r(z,y)$$ is then expressed as a relational operation:
 \begin{align}\small
 R&\leftarrow\rho_{R(\stt{pred,ent1,ent2})}(\pi_{M.\stt{head}, R_2.\stt{ent1}, R_3.\stt{ent2}}\\\nonumber
 &\phantom{\leftarrow}((M\bowtie_{M.\stt{body1}=R_2.\stt{pred}} R_2)\\\nonumber
@@ -398,22 +409,39 @@ G&\leftarrow R_1\bowtie R\nonumber
 
 %---------- slide --------------------------------------------------%
 \begin{frame}{Grounding Results}
-The relational Markov logic model saves us from managing thousands of tables as in previous approaches. As a result, We grounded the whole \sherlock-\holmes dataset in about 1.5 hours using Greenplum, while the state-of-the-art implementation MLN crashes during its grouding phase.
+The relational Markov logic model saves us from managing thousands of
+tables as in previous approaches. As a result, We grounded the
+\sherlock-\holmes dataset in 85 seconds using Greenplum, while the
+state-of-the-art implementation MLN crashes during its grouding phase.
 \begin{table}
   \centering
   \rowcolors{1}{RoyalBlue!20}{RoyalBlue!5}
   \begin{tabular}{|c|c|}\hline
+   \#entities  & 480K   \\
    \#relations & 10,672 \\
+   \#relationships & 5K \\
    \#rules     & 31,000 \\
-   \#constants & 1.1M \\
-   \#evidence  & 250,000 \\
-   \#queries   & 10,672 \\
    \tuffy      & \textbf{\color{Red}Crash} \\
-   \probkb     & 1.5 h\\
+   \probkb     & 85s\\
    \hline
   \end{tabular}
   \caption{Dataset statistics and performance.}
 \end{table}
+\end{frame}
+
+
+%---------- slide --------------------------------------------------%
+\begin{frame}{Evaluation}
+\begin{itemize}
+  \item We learned 100K facts from the original 5K.
+  \item Not all results are correct; errors propagate.
+\end{itemize}
+\includegraphics[width=\textwidth]{error.png}
+\begin{itemize}
+  \item Errors come from word ambiguity, incorrect extractions and
+    rules.
+  \item Need pruning and re-evaluating.
+\end{itemize}
 \end{frame}
 
 
@@ -432,7 +460,8 @@ Markov locality property allows for parallel computing.
 \begin{frame}{Datapath \gist}
 \head{Generalized Iterable State Transforms (GIST)}
 \begin{itemize}
-  \item GIST Performs \emph{transitions} upon a \emph{state} until that state has converged to the desired result.
+  \item GIST Performs \emph{transitions} upon a \emph{state} until that
+    state has converged to the desired result.
   \begin{description}
     \item[Transition] MCMC Proposal function.
     \item[State] Factor graph with its samples.
@@ -448,11 +477,14 @@ Markov locality property allows for parallel computing.
 \begin{frame}{Datapath \gist}
 \head{Parallel Mcmc implementation modification on datapath}
 \begin{itemize}
-  \item Previous approach: cut the graph to smaller graphs, run mcmc on each partition. 
+  \item Previous approach: cut the graph to smaller graphs, run mcmc on
+    each partition.
     \begin{itemize}
-      \item Lost information when a factor is accross multiple subgraphs.  Inaccurate, but the faster performance.
+      \item Lost information when a factor is accross multiple
+        subgraphs.  Inaccurate, but the faster performance.
     \end{itemize}
-  \item Modified approach: Do not cut the graph. Add write lock on each variables.
+  \item Modified approach: Do not cut the graph. Add write lock on each
+    variables.
     \begin{itemize}
       \item More accurate, but lower performance. 
     \end{itemize}
@@ -490,34 +522,6 @@ Markov locality property allows for parallel computing.
   \end{tabular}
   \caption{Time to generate 5000 joint samples for different graphs.}
 \end{table}
-\end{frame}
-
-
-%---------- slide --------------------------------------------------%
-\section{Discussion}
-\subsection{Discussion}
-\begin{frame}{Next Steps}
-\begin{itemize}
-  \item Grounding/inference connection
-    \begin{itemize}
-      \item Construct graph structures from relational format.
-      \item Partition and Merge: opportunity of GLA parallelism.
-    \end{itemize}
-  \item DB-memory synchronization
-    \begin{itemize}
-      \item Determine an update and write-back policy to synchronize DB and in-memory data.
-      \item Buffer manager; IO efficiency
-    \end{itemize}
-  \item Incremental inference
-    \begin{itemize}
-      \item Schedule Datapath execution so that computation is focused on the least convergent portion of the factor graph.
-    \end{itemize}
-  \item Evaluation
-    \begin{itemize}
-      \item MCMC evaluation: multi-chain convergence test
-      \item Result evaluation: Manual check (AMT)
-    \end{itemize}
-\end{itemize}
 \end{frame}
 
 
